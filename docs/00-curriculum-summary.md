@@ -28,21 +28,21 @@
 
 ```mermaid
 flowchart TD
-    PRE[Pre. 보안 및 리스크 가이드] --> A[1. 문제 정의 - 요구사항 분석]
-    A --> B[2. Instruction 설정 - 코딩 컨벤션 정의]
-    B --> C[3. 개발 정의서 작성 - API 명세서, ERD]
-    C --> D[4. 프롬프트 작성 - 3S 원칙 적용]
-    D --> E[5. 코드 생성 및 읽기 - Copilot으로 코드 생성]
-    E --> F[6. 코드 검증 리뷰 - 정확성, 보안, 성능 검증]
+    PRE[Pre. 보안/리스크 가이드] --> A[1. 요구사항 분석]
+    A --> B[2. 코딩 컨벤션 설정]
+    B --> C[3. API 명세서/ERD]
+    C --> D[4. 프롬프트 3S 원칙]
+    D --> E[5. Copilot 코드 생성]
+    E --> F[6. 코드 검증 리뷰]
     F --> G{검증 통과?}
-    G -->|No| H[8. 리팩토링 - 문제 해결]
+    G -->|No| H[8. 리팩토링]
     H --> F
-    G -->|Yes| I[7. 테스트 작성 - 단위/통합 테스트]
+    G -->|Yes| I[7. 단위/통합 테스트]
     I --> J{테스트 통과?}
     J -->|No| H
-    J -->|Yes| K[9. 전체 사이클 실습 - 요구사항~Merge]
+    J -->|Yes| K[9. 전체 사이클 실습]
     K --> L[완료]
-    
+
     style PRE fill:#ffd6e0
     style A fill:#e1f5ff
     style B fill:#fff4e1
