@@ -12,6 +12,7 @@ import com.example.productservice.kafka.ProductEventProducer;
 import com.example.productservice.repository.ProductRepository;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -134,5 +135,74 @@ class ProductServiceTest {
     assertThat(product.getStock()).isEqualTo(150);
     verify(productRepository).save(product);
     verify(productEventProducer).sendStockUpdatedEvent(any());
+  }
+
+  @Test
+  @DisplayName("카테고리에 상품이 있는 경우 상품 목록을 반환해야 한다")
+  void should_returnProducts_when_categoryExists() {
+    // given
+    String categoryName = "전자제품";
+    List<Product> products =
+        List.of(
+            Product.builder()
+                .id(1L)
+                .name("노트북")
+                .description("고성능 노트북")
+                .price(BigDecimal.valueOf(1500000))
+                .stock(10)
+                .category(categoryName)
+                .createdAt(LocalDateTime.now())
+                .build(),
+            Product.builder()
+                .id(2L)
+                .name("마우스")
+                .description("무선 마우스")
+                .price(BigDecimal.valueOf(50000))
+                .stock(50)
+                .category(categoryName)
+                .createdAt(LocalDateTime.now())
+                .build());
+
+    when(productRepository.findByCategory(categoryName)).thenReturn(products);
+
+    // when
+    List<ProductResponse> result = productService.findByCategory(categoryName);
+
+    // then
+    assertThat(result).hasSize(2);
+    assertThat(result.get(0).getName()).isEqualTo("노트북");
+    assertThat(result.get(0).getCategory()).isEqualTo(categoryName);
+    assertThat(result.get(1).getName()).isEqualTo("마우스");
+    assertThat(result.get(1).getCategory()).isEqualTo(categoryName);
+    verify(productRepository).findByCategory(categoryName);
+  }
+
+  @Test
+  @DisplayName("카테고리에 상품이 없는 경우 빈 목록을 반환해야 한다")
+  void should_returnEmptyList_when_categoryNotExists() {
+    // given
+    String categoryName = "존재하지않는카테고리";
+    when(productRepository.findByCategory(categoryName)).thenReturn(List.of());
+
+    // when
+    List<ProductResponse> result = productService.findByCategory(categoryName);
+
+    // then
+    assertThat(result).isEmpty();
+    verify(productRepository).findByCategory(categoryName);
+  }
+
+  @Test
+  @DisplayName("null 카테고리 전달 시 빈 목록을 반환해야 한다")
+  void should_returnEmptyList_when_categoryIsNull() {
+    // given
+    when(productRepository.findByCategory(null)).thenReturn(List.of());
+
+    // when
+    List<ProductResponse> result = productService.findByCategory(null);
+
+    // then
+    assertThat(result).isEmpty();
+    verify(productRepository).findByCategory(null);
   }
 }
