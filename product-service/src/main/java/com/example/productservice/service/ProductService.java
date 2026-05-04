@@ -30,7 +30,6 @@ public class ProductService {
             .description(request.getDescription())
             .price(request.getPrice())
             .stock(request.getStock())
-            .category(request.getCategory())
             .build();
 
     Product savedProduct = productRepository.save(product);
@@ -54,8 +53,8 @@ public class ProductService {
   }
 
   @Transactional(readOnly = true)
-  public List<ProductResponse> getProductsByCategory(String category) {
-    return productRepository.findByCategory(category).stream()
+  public List<ProductResponse> findByCategory(String categoryName) {
+    return productRepository.findByCategory(categoryName).stream()
         .map(this::toResponse)
         .collect(Collectors.toList());
   }
@@ -136,7 +135,6 @@ public class ProductService {
         .description(product.getDescription())
         .price(product.getPrice())
         .stock(product.getStock())
-        .category(product.getCategory())
         .createdAt(product.getCreatedAt())
         .updatedAt(product.getUpdatedAt())
         .build();

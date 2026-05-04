@@ -38,10 +38,10 @@ public class ProductController {
     return ResponseEntity.ok(ApiResponse.success(products));
   }
 
-  @GetMapping("/category/{category}")
+  @GetMapping("/category/{categoryName}")
   public ResponseEntity<ApiResponse<List<ProductResponse>>> getProductsByCategory(
-      @PathVariable String category) {
-    List<ProductResponse> products = productService.getProductsByCategory(category);
+      @PathVariable String categoryName) {
+    List<ProductResponse> products = productService.findByCategory(categoryName);
     return ResponseEntity.ok(ApiResponse.success(products));
   }
 
